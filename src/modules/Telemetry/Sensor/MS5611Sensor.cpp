@@ -6,7 +6,7 @@
 #include "MS5611Sensor.h"
 #include "TelemetrySensor.h"
 #include <typeinfo>
-
+MS5611 ms5611(nodeTelemetrySensorsMap[meshtastic_TelemetrySensorType_MS5611].first);
 // Konstruktor
 MS5611Sensor::MS5611Sensor() : TelemetrySensor(meshtastic_TelemetrySensorType_MS5611, "MS5611") {}
 
@@ -14,15 +14,13 @@ int32_t MS5611Sensor::runOnce()
 {
     LOG_INFO("Initing external sensor: %s", sensorName);
 
-    // Ellenőrzés, hogy a szenzor elérhető-e
-    if (!hasSensor()) {
-        return DEFAULT_SENSOR_MINIMUM_WAIT_TIME_BETWEEN_READS;
-    }
-
     // Inicializálás I2C-n keresztül
-    ms5611.begin();
-
+    LOG_INFO("MS5611 sensor before begining I2C ADDR: ",nodeTelemetrySensorsMap[meshtastic_TelemetrySensorType_MS5611].first);
+    status = ms5611.begin();
+    //LOG_INFO("MS5611 sensor found: %s", ms5611.getAddress());
+    LOG_INFO("MS5611 sensor begined :)");
     // Tesztmérés hőmérséklettel
+    ms5611.read();
     float testTemperature = ms5611.getTemperature();
 
     if (testTemperature == MS5611_NOT_READ) {
@@ -59,7 +57,7 @@ bool MS5611Sensor::getMetrics(meshtastic_Telemetry *measurement)
 
     measurement->variant.environment_metrics.has_temperature = true;
     measurement->variant.environment_metrics.has_barometric_pressure = true;
-
+    ms5611.read();
     // Mérési értékek lekérdezése
     float temperature = ms5611.getTemperature();
     float pressure = ms5611.getPressure();
@@ -77,7 +75,7 @@ bool MS5611Sensor::getMetrics(meshtastic_Telemetry *measurement)
 
     // Adatok mentése
     measurement->variant.environment_metrics.temperature = temperature;
-    measurement->variant.environment_metrics.barometric_pressure = pressure / 100.0F; // hPa-ra konvertálás
+    measurement->variant.environment_metrics.barometric_pressure = pressure;
     LOG_DEBUG("MS5611::getMetrics() lefutott");
     return true;
 }

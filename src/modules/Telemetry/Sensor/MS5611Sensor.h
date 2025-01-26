@@ -11,9 +11,9 @@ public:
     int32_t runOnce() override;
     void setup() override;
     bool getMetrics(meshtastic_Telemetry *measurement) override;
-
+   // MS5611 MS5611(0x77);
 private:
-    MS5611 ms5611;
+    
     bool initialized;
 };
 

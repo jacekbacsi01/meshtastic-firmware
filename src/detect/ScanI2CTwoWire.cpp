@@ -223,7 +223,7 @@ void ScanI2CTwoWire::scanPort(I2CPort port, uint8_t *address, uint8_t asize)
 #endif
             case BME_ADDR: //0x76
             //registerValue = getRegisterValue(ScanI2CTwoWire::RegisterLocation(addr, 0xD0), 1); // GET_ID
-                registerValue = 0x76;
+                // registerValue = 0x76;
                 LOG_DEBUG("---SCAN TYPE: MS5611---");
                 logFoundDevice("MS5611", (uint8_t)addr.address);
                 type = MS5611;

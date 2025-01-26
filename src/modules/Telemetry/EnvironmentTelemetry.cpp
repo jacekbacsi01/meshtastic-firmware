@@ -404,6 +404,10 @@ bool EnvironmentTelemetryModule::getEnvironmentTelemetry(meshtastic_Telemetry *m
         valid = valid && bmp280Sensor.getMetrics(m);
         hasSensor = true;
     }
+    if (ms5611Sensor.hasSensor()) {
+        valid = valid && ms5611Sensor.getMetrics(m);
+        hasSensor = true;
+    }
     if (bme280Sensor.hasSensor()) {
         valid = valid && bme280Sensor.getMetrics(m);
         hasSensor = true;
